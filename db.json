@@ -1,0 +1,89 @@
+{
+  "habitaciones": [
+    {
+      "id": "1",
+      "nombre": "Suite Vista al Mar",
+      "descripcion": "Habitación con cama king, balcón y vista panorámica al mar.",
+      "precio": 150,
+      "imagenes": [
+        "https://images.neobookings.com/1280x853/hotels/ibiza/hotel-torre-del-mar/rooms/junior-suite-sea-view-pyxo87k04n.jpeg"
+      ],
+      "capacidad": 2
+    },
+    {
+      "id": "2",
+      "nombre": "Doble Estándar",
+      "descripcion": "Cama matrimonial, baño privado, aire acondicionado.",
+      "precio": 90,
+      "imagenes": [
+        "https://image-tc.galaxy.tf/wijpeg-6iq9rljn5s40j8r6osuxtmvc7/doble-14_wide.jpg?crop=0%2C101%2C1920%2C1080"
+      ],
+      "capacidad": 2
+    },
+    {
+      "id": "3",
+      "nombre": "Familiar Deluxe",
+      "descripcion": "Dos habitaciones, cocina pequeña, ideal para familias.",
+      "precio": 180,
+      "imagenes": [
+        "https://cf.bstatic.com/xdata/images/hotel/max1024x768/512759119.jpg?k=724c37a2cc759964d2a9613e1064fea7b6595d727310afa719c9a25df7cf0a93&o=&hp=1"
+      ],
+      "capacidad": 4
+    }
+  ],
+  "servicios": [
+    {
+      "id": "1",
+      "titulo": "Piscina Infinita",
+      "descripcion": "Piscina al aire libre con vista al mar, abierta todo el año."
+    },
+    {
+      "id": "2",
+      "titulo": "Restaurante Gourmet",
+      "descripcion": "Menú internacional con platos locales y postres artesanales."
+    },
+    {
+      "id": "3",
+      "titulo": "Spa y Masajes",
+      "descripcion": "Servicio completo de spa y masajes terapéuticos."
+    }
+  ],
+  "blog": [
+    {
+      "id": "1",
+      "titulo": "Qué hacer en la costa este",
+      "excerpt": "Explora playas, parques y atracciones locales cerca del hotel.",
+      "contenido": "Nuestra ubicación privilegiada te permite disfrutar de las mejores playas..."
+    },
+    {
+      "id": "2",
+      "titulo": "Consejos para un viaje perfecto",
+      "excerpt": "Antes de venir, revisa nuestras recomendaciones.",
+      "contenido": "Planificar tu viaje con antelación garantiza una mejor experiencia..."
+    }
+  ],
+  "testimonios": [
+    {
+      "id": "1",
+      "nombre": "Ana Pérez",
+      "mensaje": "Excelente atención y habitaciones muy cómodas."
+    },
+    {
+      "id": "2",
+      "nombre": "Carlos Gómez",
+      "mensaje": "Volveré sin duda, el spa fue una experiencia única."
+    }
+  ],
+  "reservas": [
+    {
+      "id": "28b7",
+      "nombre": "asda",
+      "email": "ejemplo@exp.com",
+      "telefono": "109410",
+      "fechaInicio": "2025-03-01",
+      "fechaFin": "2025-03-05",
+      "personas": "3",
+      "mensaje": "prueba"
+    }
+  ]
+}
