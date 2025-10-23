@@ -21,10 +21,10 @@ app.use(cors());
 app.use(express.json());
 
 // Rutas principales
-app.use("/api/habitaciones", habitacionesRoutes);
-app.use("/api/blog", blogRoutes);
-app.use("/api/reservas", reservasRoutes);
-app.use("/api/testimonios", testimoniosRoutes);
+app.use("/habitaciones", habitacionesRoutes);
+app.use("/blog", blogRoutes);
+app.use("/reservas", reservasRoutes);
+app.use("/testimonios", testimoniosRoutes);
 
 // Puerto
 const PORT = process.env.PORT || 4000;
