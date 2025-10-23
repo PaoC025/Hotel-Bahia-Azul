@@ -12,11 +12,14 @@ import {
 import { Close, LocalOffer } from '@mui/icons-material';
 import { useAppContext } from '../context/AppContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';  // Importar useNavigate
 
 export default function PromotionBanner() {
   const { promociones, loading } = useAppContext();
   const [currentPromo, setCurrentPromo] = useState(0);
   const [visible, setVisible] = useState(true);
+
+  const navigate = useNavigate();  // Usar el hook useNavigate
 
   // Solo mostrar si hay promociones activas
   const promocionesActivas = promociones.filter(promo => promo.activa);
@@ -91,6 +94,7 @@ export default function PromotionBanner() {
                 px: 3,
                 boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
               }}
+              onClick={() => navigate('/reservas')}  // Redirigir a la página de reservas
             >
               Aprovechar Oferta
             </Button>
