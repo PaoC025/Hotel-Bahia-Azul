@@ -1,29 +1,80 @@
+// pages/Habitaciones.jsx - ACTUALIZADO
 import { useEffect, useState } from "react";
 import api from "../api/Axios";
-import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, CardActions, Box, Chip } from "@mui/material";
+import { Container, Grid, Card, CardMedia, CardContent, Typography, Button, CardActions, Box, Chip, Alert } from "@mui/material";
 import { motion } from "framer-motion";
+import { useAppContext } from "../context/AppContext";
 
 export default function Habitaciones() {
   const [rooms, setRooms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    api.get("/habitaciones")
-      .then((res) => setRooms(res.data))
-      .finally(() => setLoading(false));
+    const fetchHabitaciones = async () => {
+      try {
+        console.log('🔄 Obteniendo habitaciones del backend...');
+        const response = await api.get("/habitaciones");
+        console.log('✅ Habitaciones recibidas:', response.data);
+        setRooms(response.data);
+      } catch (error) {
+        console.error('❌ Error obteniendo habitaciones:', error);
+        setError('Error cargando las habitaciones');
+        // Datos de ejemplo como fallback
+        setRooms([
+          {
+            _id: "1",
+            nombre: "Suite Presidencial",
+            descripcion: "Lujosa suite con vista al mar y jacuzzi privado",
+            precio: 350,
+            precioOriginal: 400,
+            oferta: true,
+            imagenes: ["https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"],
+            comodidades: ["WiFi", "AC", "TV", "Jacuzzi", "Mini Bar"]
+          },
+          {
+            _id: "2", 
+            nombre: "Habitación Deluxe",
+            descripcion: "Amplia habitación con balcón y vista al jardín",
+            precio: 180,
+            precioOriginal: 200,
+            oferta: true,
+            imagenes: ["https://images.unsplash.com/photo-1582719471384-894fbb16e074?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80"],
+            comodidades: ["WiFi", "AC", "TV", "Balcón", "Caja fuerte"]
+          }
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHabitaciones();
   }, []);
 
   const handleReservar = (room) => {
-    // Aquí puedes redirigir al formulario de contacto con los datos de la habitación
-    console.log('Reservar habitación:', room);
-    // O implementar un modal de reserva
-    window.location.href = `/contacto?habitacion=${room.nombre}`;
+    // 🔽 PASAR LOS DATOS CORRECTOS A LA URL
+    const params = new URLSearchParams({
+      habitacion: room.nombre,
+      precio: room.precio
+    });
+    
+    window.location.href = `/contacto?${params.toString()}`;
   };
 
   if (loading) {
     return (
       <Container sx={{ py: 8, textAlign: 'center' }}>
         <Typography variant="h6">Cargando habitaciones...</Typography>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container sx={{ py: 8 }}>
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
       </Container>
     );
   }
@@ -39,7 +90,7 @@ export default function Habitaciones() {
 
       <Grid container spacing={4}>
         {rooms.map((room) => (
-          <Grid item xs={12} sm={6} md={4} key={room.id}>
+          <Grid item xs={12} sm={6} md={4} key={room._id || room.id}>
             <motion.div 
               whileHover={{ scale: 1.03 }}
               initial={{ opacity: 0, y: 20 }}
@@ -79,7 +130,7 @@ export default function Habitaciones() {
                 </CardContent>
                 <CardActions sx={{ justifyContent: "space-between", px: 2, pb: 2 }}>
                   <Box>
-                    {room.precioOriginal && (
+                    {room.precioOriginal && room.precioOriginal > room.precio && (
                       <Typography 
                         variant="body2" 
                         sx={{ textDecoration: 'line-through', color: 'text.secondary' }}

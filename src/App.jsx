@@ -1,11 +1,14 @@
+// App.js (actualizado)
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
-import Layout from './components/layout'
+import Layout from './components/Layout'
 import Landing from './pages/Landing'
 import Servicios from './pages/Servicios'
 import Habitaciones from './pages/Habitaciones'
 import Blog from './pages/Blog'
 import Contacto from './pages/Contacto'
 import { AnimatePresence, motion } from 'framer-motion'
+import { AppProvider } from './context/AppContext'
+import PromotionBanner from './components/PromotionBanner'
 
 function AnimatedRoutes() {
   const location = useLocation()
@@ -20,16 +23,28 @@ function AnimatedRoutes() {
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={
-          <motion.div {...pageTransition}><Landing /></motion.div>
+          <motion.div {...pageTransition}>
+            <PromotionBanner />
+            <Landing />
+          </motion.div>
         } />
         <Route path="/servicios" element={
-          <motion.div {...pageTransition}><Servicios /></motion.div>
+          <motion.div {...pageTransition}>
+            <PromotionBanner />
+            <Servicios />
+          </motion.div>
         } />
         <Route path="/habitaciones" element={
-          <motion.div {...pageTransition}><Habitaciones /></motion.div>
+          <motion.div {...pageTransition}>
+            <PromotionBanner />
+            <Habitaciones />
+          </motion.div>
         } />
         <Route path="/blog" element={
-          <motion.div {...pageTransition}><Blog /></motion.div>
+          <motion.div {...pageTransition}>
+            <PromotionBanner />
+            <Blog />
+          </motion.div>
         } />
         <Route path="/contacto" element={
           <motion.div {...pageTransition}><Contacto /></motion.div>
@@ -44,11 +59,13 @@ function AnimatedRoutes() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Layout>
-        <AnimatedRoutes />
-      </Layout>
-    </BrowserRouter>
+    <AppProvider>
+      <BrowserRouter>
+        <Layout>
+          <AnimatedRoutes />
+        </Layout>
+      </BrowserRouter>
+    </AppProvider>
   )
 }
 
