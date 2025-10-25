@@ -84,6 +84,74 @@
       "fechaFin": "2025-03-05",
       "personas": "3",
       "mensaje": "prueba"
+    },
+    {
+      "id": "696d",
+      "nombre": "andrea martinez",
+      "correo": "ernestojrm59@gmail.com",
+      "habitacion": "Suite deluxe",
+      "fechaEntrada": "2025-10-24",
+      "fechaSalida": "2025-10-31",
+      "telefono": "04247399608",
+      "personas": "3",
+      "mensaje": ""
+    },
+    {
+      "id": "4ea7",
+      "nombre": "ernesto rengifo",
+      "correo": "ernestojrm59@gmail.com",
+      "habitacion": "Doble Estándar",
+      "fechaEntrada": "2025-10-24",
+      "fechaSalida": "2025-10-25",
+      "telefono": "04247399608",
+      "personas": 1,
+      "mensaje": ""
+    },
+    {
+      "id": "8364",
+      "nombre": "jose Ramírez",
+      "correo": "ernestojrm59@gmail.com",
+      "habitacion": "Habitación Doble con Vista al Mar",
+      "fechaEntrada": "2025-11-01",
+      "fechaSalida": "2025-11-05"
+    },
+    {
+      "id": "6d78",
+      "nombre": "jose Ramírez",
+      "correo": "ernestojrm59@gmail.com",
+      "habitacion": "Habitación Doble con Vista al Mar",
+      "fechaEntrada": "2025-11-01",
+      "fechaSalida": "2025-11-05"
+    },
+    {
+      "id": "331d",
+      "nombre": "ernesto rengifo",
+      "correo": "ernestojrm59@gmail.com",
+      "habitacion": "Suite Vista al Mar",
+      "fechaEntrada": "2025-10-24",
+      "fechaSalida": "2025-10-25",
+      "telefono": "04247399608",
+      "personas": "3",
+      "mensaje": ""
+    },
+    {
+      "id": "767f",
+      "nombre": "yenny vzla",
+      "correo": "ernestojrm59@gmail.com",
+      "habitacion": "Familiar Deluxe",
+      "fechaEntrada": "2025-10-24",
+      "fechaSalida": "2025-10-31",
+      "telefono": "6146546545",
+      "personas": 1,
+      "mensaje": ""
+    },
+    {
+      "id": "5ff4",
+      "nombre": "marco Ramírez",
+      "correo": "ernestojrm59@gmail.com",
+      "habitacion": "Doble Estándar",
+      "fechaEntrada": "2025-11-01",
+      "fechaSalida": "2025-11-07"
     }
   ]
 }
