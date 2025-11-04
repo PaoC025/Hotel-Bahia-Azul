@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const reviewSchema = new mongoose.Schema({
   habitacion: {
@@ -15,44 +15,46 @@ const reviewSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 1,
-    max: 5
+    max: 5,
+    validate: {
+      validator: Number.isInteger,
+      message: 'La calificación debe ser un número entero'
+    }
   },
   comentario: {
     type: String,
     required: true,
+    trim: true,
+    minlength: 10,
     maxlength: 500
   },
-  titulo: {
-    type: String,
-    required: true,
-    maxlength: 100
-  },
-  fechaEstadia: {
+  fecha: {
     type: Date,
-    required: true
+    default: Date.now
   },
-  aprobado: {
-    type: Boolean,
-    default: false
-  },
-  respuestaAdmin: {
-    texto: String,
-    fecha: Date,
-    administrador: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    }
+  estado: {
+    type: String,
+    enum: ['pendiente', 'aprobado', 'rechazado'],
+    default: 'aprobado'
   }
 }, {
   timestamps: true
 });
 
-// Índice compuesto para evitar reviews duplicadas
+// Índice para evitar reviews duplicadas
 reviewSchema.index({ habitacion: 1, usuario: 1 }, { unique: true });
 
-// Índice para búsquedas
-reviewSchema.index({ habitacion: 1, aprobado: 1 });
+// Índices para búsquedas eficientes
+reviewSchema.index({ habitacion: 1, fecha: -1 });
 reviewSchema.index({ calificacion: 1 });
+reviewSchema.index({ estado: 1 });
+reviewSchema.index({ usuario: 1 });
 
-const Review = mongoose.model("Review", reviewSchema);
-export default Review;
+// Método para formatear la respuesta
+reviewSchema.methods.toJSON = function() {
+  const review = this.toObject();
+  delete review.__v;
+  return review;
+};
+
+export default mongoose.model('Review', reviewSchema);

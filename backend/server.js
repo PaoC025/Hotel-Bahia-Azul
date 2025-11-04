@@ -46,7 +46,7 @@ app.use("/api/reservas", reservasRoutes);
 app.use("/api/testimonios", testimoniosRoutes);
 app.use("/api/reviews", reviewRoutes);
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // 🔽 NUEVAS Rutas de autenticación
 app.use("/api/auth", authRoutes);
