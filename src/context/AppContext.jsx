@@ -304,6 +304,34 @@ export function AppProvider({ children }) {
     }
   };
 
+
+  // Habitaciones
+const fetchHabitaciones = async () => {
+  try {
+    const response = await api.get('/habitaciones');
+    setHabitaciones(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error cargando habitaciones:', error);
+    
+    // Datos de ejemplo como fallback
+    const mockHabitaciones = [
+      {
+        _id: "1",
+        nombre: "Suite Presidencial",
+        descripcion: "Lujosa suite con vista al mar",
+        precio: 350,
+        imagenes: ["https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=600"],
+        comodidades: ["WiFi", "AC", "TV", "Jacuzzi"]
+      }
+    ];
+    
+    setHabitaciones(mockHabitaciones);
+    return mockHabitaciones;
+  }
+};
+
+
   // 🔽 SIMPLIFICADO: Sincronizar reservas pendientes (sin notificación automática)
   const syncPendingReservations = async () => {
     const pendingReservations = reservas.filter(r => !r.sincronizada);

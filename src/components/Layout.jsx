@@ -1,22 +1,84 @@
-import { AppBar, Toolbar, Typography, Button, Container, Box, IconButton, Drawer, List, ListItem, ListItemText, Grid, Badge } from "@mui/material";
+import { AppBar, Toolbar, Typography, Button, Container, Box, IconButton, Drawer, List, ListItem, ListItemText, Grid, Badge, Menu, MenuItem, Avatar, Chip } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
 import NotificationCenter from "./NotificacionCenter.jsx";
 import { useAppContext } from "../context/AppContext";
+import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
+import { AccountCircle, DarkMode, LightMode, Login, Logout, PersonAdd } from "@mui/icons-material";
 
 export default function Layout({ children }) {
   const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const { reservas } = useAppContext();
+  const { user, logout, isAuthenticated } = useAuth();
+  const { darkMode, toggleDarkMode } = useTheme();
+
+  // Manejo del menu de usuario
+  const handleUserMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    handleCloseUserMenu();
+  };
+
+  // Estilos condicionales para dark mode
+  const appBarStyles = {
+    bgcolor: 'background.paper',
+    borderBottom: '1px solid',
+    borderColor: 'divider',
+    background: darkMode 
+      ? 'linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%)' 
+      : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'
+  };
+
+  const drawerStyles = {
+    width: 280,
+    background: darkMode 
+      ? 'linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%)'
+      : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+    color: darkMode ? '#ffffff' : 'inherit'
+  };
+
+  const footerStyles = {
+    bgcolor: 'primary.dark', 
+    color: 'white', 
+    py: 6,
+    background: darkMode
+      ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)'
+      : 'linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%)'
+  };
+
+  const logoGradient = darkMode 
+    ? 'linear-gradient(45deg, #90caf9 30%, #42a5f5 90%)'
+    : 'linear-gradient(45deg, #1E40AF 30%, #3B82F6 90%)';
+
+  const reservarButtonGradient = darkMode
+    ? 'linear-gradient(45deg, #ec407a 30%, #f48fb1 90%)'
+    : 'linear-gradient(45deg, #F59E0B 30%, #FBBF24 90%)';
+
+  const reservarButtonHoverGradient = darkMode
+    ? 'linear-gradient(45deg, #d81b60 30%, #ec407a 90%)'
+    : 'linear-gradient(45deg, #D97706 30%, #F59E0B 90%)';
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
-      <AppBar position="sticky" color="default" elevation={1} sx={{ 
-        bgcolor: 'white',
-        background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-        borderBottom: '1px solid',
-        borderColor: 'grey.100'
-      }}>
+    <Box sx={{ 
+      minHeight: "100vh", 
+      display: "flex", 
+      flexDirection: "column",
+      bgcolor: 'background.default',
+      color: 'text.primary',
+      transition: 'all 0.3s ease'
+    }}>
+      {/* AppBar */}
+      <AppBar position="sticky" color="default" elevation={1} sx={appBarStyles}>
         <Toolbar sx={{ 
           justifyContent: "space-between", 
           py: 1,
@@ -32,9 +94,8 @@ export default function Layout({ children }) {
               to="/"
               sx={{
                 textDecoration: "none",
-                color: "primary.main",
                 fontWeight: "bold",
-                background: 'linear-gradient(45deg, #1E40AF 30%, #3B82F6 90%)',
+                background: logoGradient,
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -64,7 +125,7 @@ export default function Layout({ children }) {
                   py: 1,
                   fontSize: '0.95rem',
                   '&:hover': {
-                    backgroundColor: 'primary.50',
+                    backgroundColor: darkMode ? 'primary.dark' : 'primary.50',
                     color: 'primary.main',
                     transform: 'translateY(-1px)',
                     boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)'
@@ -77,10 +138,158 @@ export default function Layout({ children }) {
             ))}
             
             {/* Separador */}
-            <Box sx={{ width: '1px', height: 24, bgcolor: 'grey.300', mx: 1 }} />
+            <Box sx={{ 
+              width: '1px', 
+              height: 24, 
+              bgcolor: darkMode ? 'grey.700' : 'grey.300', 
+              mx: 1 
+            }} />
+
+            {/* Dark Mode Toggle */}
+            <IconButton 
+              onClick={toggleDarkMode}
+              sx={{ 
+                color: 'text.primary',
+                '&:hover': {
+                  backgroundColor: darkMode ? 'primary.dark' : 'primary.50',
+                  color: 'primary.main'
+                }
+              }}
+            >
+              {darkMode ? <LightMode /> : <DarkMode />}
+            </IconButton>
 
             {/* Centro de Notificaciones */}
             <NotificationCenter />
+
+            {/* Menú de usuario o botones de auth */}
+            {isAuthenticated ? (
+              <>
+                {/* Usuario autenticado */}
+                <Button
+                  onClick={handleUserMenu}
+                  startIcon={
+                    <Avatar 
+                      sx={{ 
+                        width: 32, 
+                        height: 32, 
+                        bgcolor: 'primary.main',
+                        fontSize: '0.8rem'
+                      }}
+                    >
+                      {user?.nombre?.charAt(0)?.toUpperCase() || 'U'}
+                    </Avatar>
+                  }
+                  sx={{ 
+                    color: 'text.primary',
+                    fontWeight: 600,
+                    '&:hover': {
+                      backgroundColor: darkMode ? 'primary.dark' : 'primary.50'
+                    }
+                  }}
+                >
+                  {user?.nombre?.split(' ')[0] || 'Usuario'}
+                  {user?.rol === 'admin' && (
+                    <Chip 
+                      label="Admin" 
+                      size="small" 
+                      color="secondary" 
+                      sx={{ ml: 1, height: 20, fontSize: '0.6rem' }}
+                    />
+                  )}
+                </Button>
+
+                {/* Menu de usuario */}
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleCloseUserMenu}
+                  PaperProps={{
+                    sx: {
+                      mt: 1,
+                      minWidth: 200,
+                      bgcolor: darkMode ? 'background.paper' : 'background.paper'
+                    }
+                  }}
+                >
+                  <MenuItem disabled>
+                    <ListItemText 
+                      primary={user?.nombre} 
+                      secondary={user?.email}
+                      primaryTypographyProps={{ 
+                        fontWeight: 600,
+                        color: darkMode ? 'text.primary' : 'text.primary'
+                      }}
+                      secondaryTypographyProps={{ 
+                        variant: 'caption',
+                        color: darkMode ? 'text.secondary' : 'text.secondary'
+                      }}
+                    />
+                  </MenuItem>
+                  
+                  {user?.rol === 'admin' && (
+                    <MenuItem 
+                      component={Link} 
+                      to="/admin"
+                      onClick={handleCloseUserMenu}
+                      sx={{
+                        color: darkMode ? 'text.primary' : 'text.primary'
+                      }}
+                    >
+                      <AccountCircle sx={{ mr: 1 }} />
+                      Panel Admin
+                    </MenuItem>
+                  )}
+                  
+                  <MenuItem 
+                    onClick={handleLogout}
+                    sx={{
+                      color: darkMode ? 'text.primary' : 'text.primary'
+                    }}
+                  >
+                    <Logout sx={{ mr: 1 }} />
+                    Cerrar Sesión
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              /* Usuario no autenticado */
+              <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Button 
+                  component={Link}
+                  to="/login"
+                  startIcon={<Login />}
+                  sx={{ 
+                    fontWeight: 600,
+                    color: 'text.primary',
+                    '&:hover': {
+                      backgroundColor: darkMode ? 'primary.dark' : 'primary.50',
+                      color: 'primary.main'
+                    }
+                  }}
+                >
+                  Ingresar
+                </Button>
+                
+                <Button 
+                  component={Link}
+                  to="/register"
+                  variant="outlined"
+                  startIcon={<PersonAdd />}
+                  sx={{ 
+                    fontWeight: 600,
+                    borderColor: 'primary.main',
+                    color: 'primary.main',
+                    '&:hover': {
+                      backgroundColor: darkMode ? 'primary.dark' : 'primary.50',
+                      borderColor: 'primary.dark'
+                    }
+                  }}
+                >
+                  Registrarse
+                </Button>
+              </Box>
+            )}
 
             {/* Botón Reservar */}
             <Button 
@@ -95,10 +304,10 @@ export default function Layout({ children }) {
                 py: 1,
                 fontWeight: 700,
                 fontSize: '0.95rem',
-                background: 'linear-gradient(45deg, #F59E0B 30%, #FBBF24 90%)',
+                background: reservarButtonGradient,
                 boxShadow: '0 4px 15px rgba(245, 158, 11, 0.3)',
                 '&:hover': {
-                  background: 'linear-gradient(45deg, #D97706 30%, #F59E0B 90%)',
+                  background: reservarButtonHoverGradient,
                   transform: 'translateY(-2px)',
                   boxShadow: '0 6px 20px rgba(245, 158, 11, 0.4)'
                 },
@@ -128,7 +337,7 @@ export default function Layout({ children }) {
               display: { md: "none" },
               color: 'primary.main',
               '&:hover': {
-                backgroundColor: 'primary.50'
+                backgroundColor: darkMode ? 'primary.dark' : 'primary.50'
               }
             }} 
             onClick={() => setOpen(true)}
@@ -143,12 +352,7 @@ export default function Layout({ children }) {
         anchor="right" 
         open={open} 
         onClose={() => setOpen(false)}
-        PaperProps={{
-          sx: {
-            width: 280,
-            background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'
-          }
-        }}
+        PaperProps={{ sx: drawerStyles }}
       >
         <Box sx={{ p: 2 }}>
           {/* Header del drawer */}
@@ -156,9 +360,8 @@ export default function Layout({ children }) {
             <Typography
               variant="h6"
               sx={{
-                color: "primary.main",
                 fontWeight: "bold",
-                background: 'linear-gradient(45deg, #1E40AF 30%, #3B82F6 90%)',
+                background: logoGradient,
                 backgroundClip: 'text',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
@@ -179,8 +382,9 @@ export default function Layout({ children }) {
                 sx={{ 
                   borderRadius: 2,
                   mb: 1,
+                  color: darkMode ? 'text.primary' : 'text.primary',
                   '&:hover': {
-                    backgroundColor: 'primary.50',
+                    backgroundColor: darkMode ? 'primary.dark' : 'primary.50',
                     color: 'primary.main'
                   }
                 }}
@@ -189,11 +393,175 @@ export default function Layout({ children }) {
                   primary={text} 
                   primaryTypographyProps={{ 
                     fontWeight: 600,
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    color: 'inherit'
                   }}
                 />
               </ListItem>
             ))}
+
+            {/* Sección de autenticación en móvil */}
+            {isAuthenticated ? (
+              <>
+                <ListItem 
+                  button 
+                  onClick={() => setOpen(false)}
+                  sx={{ 
+                    borderRadius: 2,
+                    mb: 1,
+                    backgroundColor: darkMode ? 'primary.dark' : 'primary.50',
+                    color: darkMode ? 'text.primary' : 'text.primary',
+                    '&:hover': {
+                      backgroundColor: darkMode ? 'primary.main' : 'primary.100'
+                    }
+                  }}
+                >
+                  <ListItemText 
+                    primary={
+                      <Box sx={{ textAlign: 'center' }}>
+                        <Typography fontWeight="bold">
+                           Hola, {user?.nombre?.split(' ')[0]}
+                        </Typography>
+                        {user?.rol === 'admin' && (
+                          <Chip 
+                            label="Admin" 
+                            size="small" 
+                            color="secondary" 
+                            sx={{ mt: 0.5, height: 20, fontSize: '0.6rem' }}
+                          />
+                        )}
+                      </Box>
+                    } 
+                  />
+                </ListItem>
+                
+                {user?.rol === 'admin' && (
+                  <ListItem 
+                    button 
+                    component={Link} 
+                    to="/admin"
+                    onClick={() => setOpen(false)}
+                    sx={{ 
+                      borderRadius: 2,
+                      mb: 1,
+                      color: darkMode ? 'text.primary' : 'text.primary',
+                      '&:hover': {
+                        backgroundColor: darkMode ? 'primary.dark' : 'primary.50'
+                      }
+                    }}
+                  >
+                    <ListItemText 
+                      primary="Panel Admin" 
+                      primaryTypographyProps={{ 
+                        fontWeight: 600,
+                        textAlign: 'center',
+                        color: 'inherit'
+                      }}
+                    />
+                  </ListItem>
+                )}
+                
+                <ListItem 
+                  button 
+                  onClick={handleLogout}
+                  sx={{ 
+                    borderRadius: 2,
+                    mb: 1,
+                    color: darkMode ? 'text.primary' : 'text.primary',
+                    '&:hover': {
+                      backgroundColor: 'error.50',
+                      color: 'error.main'
+                    }
+                  }}
+                >
+                  <ListItemText 
+                    primary="Cerrar Sesión" 
+                    primaryTypographyProps={{ 
+                      fontWeight: 600,
+                      textAlign: 'center',
+                      color: 'inherit'
+                    }}
+                  />
+                </ListItem>
+              </>
+            ) : (
+              <>
+                <ListItem 
+                  button 
+                  component={Link} 
+                  to="/login"
+                  onClick={() => setOpen(false)}
+                  sx={{ 
+                    borderRadius: 2,
+                    mb: 1,
+                    color: darkMode ? 'text.primary' : 'text.primary',
+                    '&:hover': {
+                      backgroundColor: darkMode ? 'primary.dark' : 'primary.50'
+                    }
+                  }}
+                >
+                  <ListItemText 
+                    primary="Iniciar Sesión" 
+                    primaryTypographyProps={{ 
+                      fontWeight: 600,
+                      textAlign: 'center',
+                      color: 'inherit'
+                    }}
+                  />
+                </ListItem>
+                
+                <ListItem 
+                  button 
+                  component={Link} 
+                  to="/register"
+                  onClick={() => setOpen(false)}
+                  sx={{ 
+                    borderRadius: 2,
+                    mb: 1,
+                    backgroundColor: darkMode ? 'primary.dark' : 'primary.50',
+                    color: darkMode ? 'text.primary' : 'text.primary',
+                    '&:hover': {
+                      backgroundColor: darkMode ? 'primary.main' : 'primary.100'
+                    }
+                  }}
+                >
+                  <ListItemText 
+                    primary="📝 Registrarse" 
+                    primaryTypographyProps={{ 
+                      fontWeight: 600,
+                      textAlign: 'center',
+                      color: 'inherit'
+                    }}
+                  />
+                </ListItem>
+              </>
+            )}
+
+            {/* Toggle Dark Mode en móvil */}
+            <ListItem 
+              button 
+              onClick={() => {
+                toggleDarkMode();
+                setOpen(false);
+              }}
+              sx={{ 
+                borderRadius: 2,
+                mb: 1,
+                color: darkMode ? 'text.primary' : 'text.primary',
+                '&:hover': {
+                  backgroundColor: darkMode ? 'primary.dark' : 'primary.50'
+                }
+              }}
+            >
+              <ListItemText 
+                primary={darkMode ? "☀️ Modo Claro" : "🌙 Modo Oscuro"} 
+                primaryTypographyProps={{ 
+                  fontWeight: 600,
+                  textAlign: 'center',
+                  color: 'inherit'
+                }}
+              />
+            </ListItem>
             
             {/* Botón Reservar en móvil */}
             <ListItem 
@@ -203,11 +571,11 @@ export default function Layout({ children }) {
               onClick={() => setOpen(false)}
               sx={{ 
                 borderRadius: 2,
-                mt: 2,
-                background: 'linear-gradient(45deg, #F59E0B 30%, #FBBF24 90%)',
+                mt: 1,
+                background: reservarButtonGradient,
                 color: 'white',
                 '&:hover': {
-                  background: 'linear-gradient(45deg, #D97706 30%, #F59E0B 90%)',
+                  background: reservarButtonHoverGradient,
                   transform: 'translateY(-1px)',
                   boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)'
                 },
@@ -243,17 +611,16 @@ export default function Layout({ children }) {
       </Drawer>
 
       {/* MAIN CONTENT */}
-      <Box sx={{ flex: 1 }}>
+      <Box sx={{ 
+        flex: 1, 
+        bgcolor: 'background.default',
+        color: 'text.primary'
+      }}>
         {children}
       </Box>
 
-      {/* FOOTER MEJORADO - Sin clima */}
-      <Box sx={{ 
-        bgcolor: 'primary.dark', 
-        color: 'white', 
-        py: 6,
-        background: 'linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%)'
-      }}>
+      {/* FOOTER MEJORADO */}
+      <Box sx={footerStyles}>
         <Container>
           <Grid container spacing={4}>
             <Grid item xs={12} md={4}>
