@@ -13,10 +13,13 @@ import habitacionesRoutes from "./routes/habitaciones.js";
 import blogRoutes from "./routes/blog.js";
 import reservasRoutes from "./routes/reservas.js";
 import testimoniosRoutes from "./routes/testimonios.js";
-import reviewRoutes from "./routes/Reviews.js";
+import reviewRoutes from "./routes/reviews.js";
+
 
 // Importar NUEVAS rutas
 import authRoutes from "./routes/auth.js";
+import adminHabitacionesRoutes from "./routes/adminHabitaciones.js"
+
 
 // Configurar variables de entorno
 dotenv.config();
@@ -50,6 +53,8 @@ app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // 🔽 NUEVAS Rutas de autenticación
 app.use("/api/auth", authRoutes);
+//Rutas protegidas para usuarios admin
+app.use("/admin/habitaciones", adminHabitacionesRoutes)
 
 // Ruta de salud para verificar que el servidor funciona
 app.get("/api/health", (req, res) => {
@@ -72,6 +77,13 @@ app.use((error, req, res, next) => {
   res.status(500).json({ 
     message: "Error interno del servidor" 
   });
+});
+
+//log para comprobar rutas cargadas
+app._router.stack.forEach((r) => {
+  if (r.route && r.route.path) {
+    console.log("➡️ Ruta cargada:", r.route.path);
+  }
 });
 
 // Puerto

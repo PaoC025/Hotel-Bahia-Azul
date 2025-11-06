@@ -48,7 +48,6 @@ export const authenticateToken = async (req, res, next) => {
     });
   }
 };
-
 export const requireAdmin = (req, res, next) => {
   console.log('👮 Verificando admin - Rol actual:', req.user?.rol);
   
